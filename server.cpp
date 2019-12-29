@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     while (1) 
     {
-        nready = epoll_wait(efd, ep, OPEN_MAX, -1); /* 阻塞监坬 */
+        nready = epoll_wait(efd, ep, OPEN_MAX, -1);  
         if (nready == -1)
             perr_exit("epoll_wait");
 
