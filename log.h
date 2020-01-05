@@ -1,4 +1,4 @@
 #include <iostream>
 
-#define  log_out()  cout << "hello" << endl;
+#define  log_out(log)  std::cout << log << std::endl;
 
