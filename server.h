@@ -21,26 +21,24 @@
 #include "event2/event.h"
 #include <iostream>
 #include "log.h"
+#include <functional>
 
+typedef std::function<void(evutil_socket_t sig, short events, void *user_data)> signal_callback;
 
-class wrapper
+class server
 {
 public:
-    wrapper(int port, std::string ip, int family);
-    void server_init();
-    ~wrapper();
+    server(int port, std::string ip, int family);
+    void init();
+    ~server();
 
     static void signal_cb(evutil_socket_t sig, short events, void *user_data);
     static void listener_cb(struct evconnlistener *listener, evutil_socket_t fd,struct sockaddr *sa,int socklen, void *user_data);
     static void conn_writecb(struct bufferevent *bev, void *user_data);
     static void conn_eventcb(struct bufferevent *bev, short events, void *user_data);
-
-    void (*register_signal_callback)(evutil_socket_t sig, short events, void *user_data);
-    void (*register_listener_callback)(struct evconnlistener *listener, evutil_socket_t fd,struct sockaddr *sa,int socklen, void *user_data);
-    void (*register_write_callback)(struct bufferevent *bev, void *user_data);
-    void (*register_event_callback)(struct bufferevent *bev, short events, void *user_data);
     
-    
+    void SetSignalCallBack(signal_callback cb);
+    void RunCallBack();
 private:
     int port;
     std::string ip;
@@ -51,9 +49,9 @@ private:
 	struct event *signal_event;
 	struct sockaddr_in sin;
 
+    signal_callback set_signal_callback;
 };
-
-
+ 
 #endif
 
 
